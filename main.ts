@@ -13,8 +13,13 @@ const ENTRY =
   "My fridge locked me out at midnight — it doesn't even work here, it just lives here for free.";
 
 // The gate allows 1..200 characters; refuse to write anything outside it.
-if ([...ENTRY].length < 1 || [...ENTRY].length > 200) {
-  throw new Error(`entry is ${[...ENTRY].length} chars, outside the 1..200 gate`);
+// Counted in Unicode code points, so the em dash counts as one character,
+// exactly as the sealed scorer counts it.
+const MIN_CHARS = 1;
+const MAX_CHARS = 200;
+const charCount = [...ENTRY].length;
+if (charCount < MIN_CHARS || charCount > MAX_CHARS) {
+  throw new Error(`entry is ${charCount} chars, outside the ${MIN_CHARS}..${MAX_CHARS} gate`);
 }
 
 mkdirSync("/output", { recursive: true });
